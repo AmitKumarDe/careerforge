@@ -35,7 +35,7 @@ npm run dev
 cd frontend
 npm install
 cp .env.example .env.local
-# Verify NEXT_PUBLIC_API_URL in .env.local
+# Verify BACKEND_API_URL in .env.local
 npm run dev
 ```
 
@@ -54,7 +54,7 @@ npm run dev
 - `RESEND_API_KEY` / `RESEND_FROM_EMAIL` - Resend email service credentials
 
 ### Frontend (`frontend/.env.example`)
-- `NEXT_PUBLIC_API_URL` - Backend API base URL (e.g., `http://localhost:5000/api`)
+- `BACKEND_API_URL` - Backend API base URL (e.g., `http://localhost:5000/api`)
 
 ---
 
