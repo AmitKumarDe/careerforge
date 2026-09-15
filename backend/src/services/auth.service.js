@@ -47,8 +47,8 @@ const registerUserService = async ({ name, email, password, role = "USER", skill
     });
 
     // Create verification URL
-    const verificationUrl =
-        `http://localhost:3000/verify-email/${verificationToken}`;
+    const frontendUrl = process.env.CLIENT_URL || (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",")[0].trim() : "http://localhost:3000");
+    const verificationUrl = `${frontendUrl}/verify-email/${verificationToken}`;
 
     // Send verification email
     await sendEmail({
@@ -245,7 +245,7 @@ const forgotPasswordService = async (email) => {
         validateBeforeSave: false,
     });
 
-    const frontendUrl = process.env.CLIENT_URL || process.env.CORS_ORIGIN || "http://localhost:3000";
+    const frontendUrl = process.env.CLIENT_URL || (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",")[0].trim() : "http://localhost:3000");
     const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
     await sendEmail({
@@ -377,8 +377,8 @@ const resendVerificationEmailService = async (email) => {
         validateBeforeSave: false,
     });
 
-    const verificationUrl =
-        `http://localhost:3000/verify-email/${verificationToken}`;
+    const frontendUrl = process.env.CLIENT_URL || (process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",")[0].trim() : "http://localhost:3000");
+    const verificationUrl = `${frontendUrl}/verify-email/${verificationToken}`;
 
     await sendEmail({
         to: user.email,

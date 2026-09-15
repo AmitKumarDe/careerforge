@@ -11,9 +11,21 @@ import educationRouter from "./routes/education.route.js";
 import experienceRouter from "./routes/experience.route.js";
 const app = express();
 
+app.set("trust proxy", 1);
+
+const allowedOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim().replace(/\/$/, ""))
+    : ["http://localhost:3000"];
+
 app.use(
     cors({
-        origin: process.env.CORS_ORIGIN || "http://localhost:3000",
+        origin: function (origin, callback) {
+            if (!origin) return callback(null, true);
+            if (allowedOrigins.includes(origin) || allowedOrigins.includes("*")) {
+                return callback(null, true);
+            }
+            return callback(new Error(`CORS blocked for origin: ${origin}`));
+        },
         credentials: true,
     })
 );
