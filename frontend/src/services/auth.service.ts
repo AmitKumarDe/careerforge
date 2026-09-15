@@ -36,6 +36,16 @@ export interface AuthResponse {
 
 export const loginUser = async (payload: LoginPayload): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>("/auth/login", payload);
+  if (typeof window !== "undefined") {
+    const accessToken = response.data?.data?.accessToken;
+    if (accessToken) {
+      localStorage.setItem("accessToken", accessToken);
+    }
+    const user = response.data?.data?.user;
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    }
+  }
   return response.data;
 };
 
@@ -50,6 +60,10 @@ export const getCurrentUser = async (): Promise<AuthResponse> => {
 };
 
 export const logoutUser = async (): Promise<{ success: boolean; message: string }> => {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("user");
+  }
   const response = await api.post("/auth/logout");
   return response.data;
 };

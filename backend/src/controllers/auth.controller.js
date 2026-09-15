@@ -3,10 +3,12 @@ import { changePasswordService, forgotPasswordService, loginServiceUser, logoutS
 import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
+const isProduction = process.env.NODE_ENV === "production" || !!process.env.RENDER;
+
 const cookieOptions = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
 };
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -56,7 +58,10 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
-    const refreshToken = req.cookies?.refreshToken;
+    const refreshToken =
+        req.cookies?.refreshToken ||
+        req.body?.refreshToken ||
+        req.header("x-refresh-token");
 
     const {
         accessToken,
@@ -70,7 +75,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                null,
+                { accessToken, refreshToken: newRefreshToken },
                 "Access token refreshed successfully"
             )
         );
